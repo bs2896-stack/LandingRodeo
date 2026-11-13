@@ -1,5 +1,10 @@
 :root {
-  --text: #6b6375;
+  --text: #fff;
+  --card-bg: rgba(0, 0, 0, 0.55);
+  --card-text: #fff;
+  --card-border: rgba(255, 255, 255, 0.2);
+  --footer-bg: #0d0f12;
+  --footer-text: #e5e7eb;
   --text-h: #08060d;
   --bg: #fff;
   --border: #e5e4e7;
@@ -15,11 +20,11 @@
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
-  font: 18px/145% var(--sans);
+  font: 20px/145% var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light dark;
   color: var(--text);
-  background: var(--bg);
+  background: var(--bg) url('./assets/bg.png') center / cover no-repeat fixed;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -30,24 +35,12 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+[data-theme='light'] {
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-text: #111;
+  --card-border: rgba(0, 0, 0, 0.12);
+  --footer-bg: #f4f3ec;
+  --footer-text: #111;
 }
 
 #root {
@@ -55,7 +48,6 @@
   max-width: 100%;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -95,8 +87,7 @@ p {
   margin: 0;
 }
 
-code,
-.counter {
+code {
   font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;

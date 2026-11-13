@@ -1,120 +1,72 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import { useEffect, useState } from 'react'
+import Card from './Card'
+import { useTheme } from './ThemeContext'
 import './App.css'
 
+type Integrante = { nombre: string; rol: string }
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [integrantes, setIntegrantes] = useState<Integrante[]>([])
+  const [visible, setVisible] = useState(false)
+  const [queEs, setQueEs] = useState(false)
+  const [preguntas, setPreguntas] = useState(false)
+  const { theme, toggle } = useTheme()
+
+  useEffect(() => {
+    fetch('/integrantes.json')
+      .then((res) => res.json())
+      .then(setIntegrantes)
+  }, [])
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
+      <nav id="topbar">
+        <button onClick={() => setQueEs(true)}>Que es</button>
+        <button onClick={() => setPreguntas(true)}>Preguntas</button>
+        <button onClick={() => setVisible(!visible)}>Nosotros</button>
+      </nav>
+
+      <button id="theme-toggle" onClick={toggle}>
+        {theme === 'dark' ? 'Claro' : 'Oscuro'}
+      </button>
+
+      {visible && (
+        <section id="integrantes">
+          {integrantes.map((i) => (
+            <Card key={i.nombre} nombre={i.nombre} rol={i.rol} />
+          ))}
+        </section>
+      )}
+
+      {queEs && (
+        <section id="que-es">
           <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+            Rodeo es una aplicación web la cual ayuda a los productores ganaderos
+            a gestionar sus lotes, planificar sus pastoreos y saber la posición de
+            su ganado.
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+          <button onClick={() => setQueEs(false)}>Volver</button>
+        </section>
+      )}
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+      {preguntas && (
+        <div id="popup" onClick={() => setPreguntas(false)}>
+          <div className="popup-box" onClick={(e) => e.stopPropagation()}>
+            <h3>¿Ya funciona? ¿Cómo contactarnos?</h3>
+            <p>
+              Sí, ya es un prototipo funcional, pero todavía tiene que
+              calibrarse. Contactanos a rodeoproyecto@gmail.com y te mandamos
+              una demo.
+            </p>
+            <button onClick={() => setPreguntas(false)}>Cerrar</button>
+          </div>
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      )}
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      <footer id="footer">
+        <a href="#nosotros">Nosotros</a>
+        <small>© 2026 Rodeo. Todos los derechos reservados.</small>
+      </footer>
     </>
   )
 }
